@@ -2,7 +2,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require('mongoose');
 
-const Post = require('./models/post');
+const postsRoutes = require('./routes/posts');
 
 const app = express();
 
@@ -25,32 +25,11 @@ app.use((req, res, next) => {
   );
   res.setHeader(
     "Access-Control-Allow-Methods",
-    "GET, POST, PATCH, DELETE, OPTIONS"
+    "GET, POST, PATCH, PUT, DELETE, OPTIONS"
   );
   next();
 });
 
-app.post("/api/posts", (req, res, next) => {
-  const post = new Post({
-    title: req.body.title,
-    content: req.body.content
-  });
-  post.save();
-  console.log(post);
-  res.status(201).json({
-    message: 'Post add sucessfully',
-  });
-});
-
-app.get("/api/posts", (req, res, next) => {
-  Post.find().then(documents => {
-    res.status(200).json({
-      message: "succesfully",
-      posts: documents
-    });
-  });
-
-});
-
+app.use('/api/posts', postsRoutes);
 
 module.exports = app;
